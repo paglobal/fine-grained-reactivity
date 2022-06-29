@@ -1,0 +1,14 @@
+{
+  "folders": [
+	{
+		"path": "."
+	},
+	{
+		"path": "../../paglobal-promethiumjs/nqtui"
+	},
+	{
+		"path": "../../paglobal-promethiumjs/nqtx"
+	}
+],
+  "settings": {}
+}
