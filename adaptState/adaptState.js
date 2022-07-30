@@ -1,9 +1,17 @@
-import get from "./get.js";
+import get from "../get.js";
 import set from "./set.js";
 
 export default function adaptState(initialValue) {
   const state = {
-    subscriptions: new Set(),
+    effectSubscriptions: {
+      one: new Set(),
+      two: new Set(),
+    },
+    memoSubscriptions: {
+      one: new Set(),
+      two: new Set(),
+    },
+    activeSubscriptions: "one",
     value: initialValue,
   };
 

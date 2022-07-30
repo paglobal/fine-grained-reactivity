@@ -8,5 +8,9 @@ export default function setCleanupSet(effect) {
   });
   if (!cleanupSet.get(0)) {
     cleanupSet.set(0, new Set());
+
+    return false;
   }
+
+  return true;
 }

@@ -1,6 +1,6 @@
 import effectAndDescendantCleanup from "./effectAndDescendantCeanup.js";
-import observableSubscriptionsCleanup from "./observableSubscriptionsCleanup.js";
-import getCleanupNode from "./getCleanupNode.js";
+import observableSubscriptionsCleanup from "../observableSubscriptionsCleanup.js";
+import getCleanupNode from "../getCleanupNode.js";
 import { effectContexts } from "../effectContexts.js";
 
 export default function execute(effect, fn) {

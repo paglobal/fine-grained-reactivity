@@ -1,4 +1,4 @@
-import getCleanupNode from "./getCleanupNode.js";
+import getCleanupNode from "../getCleanupNode.js";
 
 function traverseAndEvaluate(cleanupNode) {
   let nextChildNode = 0;

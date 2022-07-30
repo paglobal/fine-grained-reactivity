@@ -1,4 +1,4 @@
-import { effectContexts } from "../effectContexts.js";
+import { effectContexts } from "./effectContexts.js";
 
 export default function setInitialParameters(effect) {
   const parentEffect = effectContexts[effectContexts.length - 1];

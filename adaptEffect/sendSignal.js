@@ -1,4 +1,6 @@
-export default function sendSignal(effect, signal) {
+import execute from "./execute.js";
+
+export default function sendSignal(effect, fn, signal) {
   if (signal === "stale") {
     effect.staleStateValuesCount++;
   } else if (signal === "fresh") {
@@ -6,7 +8,7 @@ export default function sendSignal(effect, signal) {
     if (effect.staleStateValuesCount <= 0) {
       //to make sure "effect.stateStateValuesCount" doesn't go beyond zero
       effect.staleStateValuesCount = 0;
-      effect.execute();
+      execute(effect, fn);
     }
   }
 }

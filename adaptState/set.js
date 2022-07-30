@@ -1,17 +1,22 @@
 export default function set(state, nextValue) {
-  // [...this.subscriptions].forEach((subscription) => {
-  //   subscription.sendSignal("stale");
-  // });
+  const activeSubscriptions = state.activeSubscriptions;
+  state.activeSubscriptions = activeSubscriptions === "one" ? "two" : "one";
 
-  // this.value = nextValue;
+  state.memoSubscriptions[activeSubscriptions].forEach((subscription) => {
+    subscription.sendSignal("stale");
+  });
 
-  // [...this.subscriptions].forEach((subscription) => {
-  //   subscription.sendSignal("fresh");
-  // });
+  state.effectSubscriptions[activeSubscriptions].forEach((subscription) => {
+    subscription.sendSignal("stale");
+  });
 
   state.value = nextValue;
 
-  [...state.subscriptions].forEach((subscription) => {
-    subscription.execute();
+  state.memoSubscriptions[activeSubscriptions].forEach((subscription) => {
+    subscription.sendSignal("fresh");
+  });
+
+  state.effectSubscriptions[activeSubscriptions].forEach((subscription) => {
+    subscription.sendSignal("fresh");
   });
 }
