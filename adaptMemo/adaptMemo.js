@@ -18,6 +18,7 @@ export default function adaptMemo(fn) {
     activeSubscriptions: "one",
     value: null,
     //effect properties
+    firstRun: true,
     type: "memo",
     childCount: 0,
     position: null,
@@ -31,7 +32,7 @@ export default function adaptMemo(fn) {
 
   setInitialParameters(memo);
   setCleanupSet(memo);
-  updateValueAndSendFreshNotifications(memo, fn);
+  const cleanupMemo = updateValueAndSendFreshNotifications(memo, fn);
 
-  return () => get(memo);
+  return cleanupMemo ? () => get(cleanupMemo) : () => get(memo);
 }

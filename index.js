@@ -10,53 +10,63 @@ const [count4, setcount4] = adaptState(0);
 let product = () => {};
 //const product = adaptMemo(() => count1() * count4());
 
-let cleanup = adaptEffect(() => {
-  adaptEffect(() => {
-    console.log("1st effect", "count1", count1());
-    console.log("1st effect", "product", product());
-    console.log("1st effect", "count4", count4());
+let cleanup = adaptEffect(
+  () => {
     adaptEffect(() => {
-      console.log("2nd effect", count2());
+      //console.log("1st effect", "count1", count1());
+      //console.log("1st effect", "product", product());
+      //console.log("1st effect", "count4", count4());
       adaptEffect(() => {
-        console.log("3rd effect", count3());
+        console.log("2nd effect", count2());
         adaptEffect(() => {
-          console.log("4th effect", count4());
+          console.log("3rd effect", count3());
+          adaptEffect(() => {
+            console.log("4th effect", count4());
 
-          let newCount = count4();
-          return () => console.log("4th ReturnValue", newCount);
+            let newCount = count4();
+            return () => console.log("4th ReturnValue", newCount);
+          });
+
+          let newCount = count3();
+          return () => console.log("3rd ReturnValue", newCount);
         });
 
-        let newCount = count3();
-        return () => console.log("3rd ReturnValue", newCount);
-      });
-
-      adaptEffect(() => {
-        console.log("3rd effect-1", count3());
         adaptEffect(() => {
-          console.log("4th effect-1", count4());
+          console.log("3rd effect-1", count3());
+          adaptEffect(() => {
+            console.log("4th effect-1", count4());
 
-          let newCount = count4();
-          return () => console.log("4th ReturnValue-1", newCount);
+            let newCount = count4();
+            return () => console.log("4th ReturnValue-1", newCount);
+          });
+
+          let newCount = count3();
+          return () => console.log("3rd ReturnValue-1", newCount);
         });
 
-        let newCount = count3();
-        return () => console.log("3rd ReturnValue-1", newCount);
+        let newCount = count2();
+        return () => console.log("2nd ReturnValue", newCount);
       });
 
-      let newCount = count2();
-      return () => console.log("2nd ReturnValue", newCount);
+      //let newCount = count1();
+      //return () => console.log("1st ReturnValue", newCount);
     });
 
-    let newCount = count1();
-    return () => console.log("1st ReturnValue", newCount);
-  });
+    product = adaptMemo(() => {
+      console.log("Memo here!!");
 
-  product = adaptMemo(() => {
-    console.log("Memo here!!");
+      return count1() * count4();
+    });
 
-    return count1() * count4();
-  });
-});
+    console.log("Main effect", product());
+  },
+  [count1],
+  { defer: true }
+);
+
+//const [count5, setcount5] = adaptState(0);
+
+//adaptEffect((count) => console.log(count), [count5]);
 
 //console.log("1st");
 //setcount3(count3() + 1);
@@ -66,10 +76,18 @@ let cleanup = adaptEffect(() => {
 //cleanup();
 //console.log("4th");
 //setcount2(count2() + 1);
-console.log("5th");
-setcount4(count4() + 1);
+//console.log("5th");
+//setcount4(count4() + 1);
 //cleanup();
-console.log("6th");
-setcount4(count4() + 1);
+//console.log("6th");
+//setcount4(count4() + 1);
 console.log("7th");
-setcount4(count4() + 1);
+setcount1(count1() + 1);
+console.log("8th");
+setcount1(count1() + 1);
+//console.log("9th");
+//setcount5(count5() + 1);
+//console.log("10th");
+//setcount1(count1() + 1);
+//console.log("11th");
+//setcount1(count1() + 1);

@@ -1,3 +1,5 @@
+import { updateMemoCleanups } from "../cleanupUpdateFns.js";
+
 export default function set(state, nextValue) {
   const activeSubscriptions = state.activeSubscriptions;
   state.activeSubscriptions = activeSubscriptions === "one" ? "two" : "one";
@@ -19,4 +21,6 @@ export default function set(state, nextValue) {
   state.effectSubscriptions[activeSubscriptions].forEach((subscription) => {
     subscription.sendSignal("fresh");
   });
+
+  updateMemoCleanups();
 }
