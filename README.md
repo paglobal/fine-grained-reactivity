@@ -1,3 +1,3 @@
-[***State***](./adaptState/adaptState.js), 
-[***Memos***](./adaptMemo.js) and 
-[***Effects***](./adaptEffect/adaptEffect.js).
+[***State***](./adaptState/),
+[***Memos***](./adaptMemo/) and
+[***Effects***](./adaptEffect/).
