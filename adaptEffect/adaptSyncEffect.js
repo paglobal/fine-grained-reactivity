@@ -3,13 +3,13 @@ import sendSignal from "./sendSignal.js";
 import setInitialParameters from "../setInitialParameters.js";
 import setCleanupSet from "../setCleanupSet.js";
 
-export default function adaptEffect(fn, depArray, options) {
+export default function adaptSyncEffect(fn, depArray, options) {
   const tracking = typeof depArray === "undefined" ? "implicit" : "depArray";
   const execute = executeFns[tracking];
 
   const effect = {
     firstRun: true,
-    type: "async",
+    type: "sync",
     tracking,
     childCount: 0,
     position: null,
@@ -24,5 +24,5 @@ export default function adaptEffect(fn, depArray, options) {
   setInitialParameters(effect);
   setCleanupSet(effect);
 
-  setTimeout(() => execute(effect, fn, depArray, options));
+  return execute(effect, fn, depArray, options);
 }

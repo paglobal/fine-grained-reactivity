@@ -2,18 +2,13 @@ import observableSubscriptionsCleanup from "../observableSubscriptionsCleanup.js
 import getCleanupNode from "../getCleanupNode.js";
 import { effectContexts } from "../effectContexts.js";
 import { queueCleanupUpdates } from "../cleanupUpdateFns.js";
+import { sendStaleSignals, sendFreshSignals } from "../sendSignals.js";
 
 export function sendStaleNotifications(memo) {
   const activeSubscriptions = memo.activeSubscriptions;
   memo.activeSubscriptions = activeSubscriptions === "one" ? "two" : "one";
 
-  memo.memoSubscriptions[activeSubscriptions].forEach((subscription) => {
-    subscription.sendSignal("stale");
-  });
-
-  memo.effectSubscriptions[activeSubscriptions].forEach((subscription) => {
-    subscription.sendSignal("stale");
-  });
+  sendStaleSignals(memo, activeSubscriptions);
 }
 
 export function updateValueAndSendFreshNotifications(memo, fn) {
@@ -49,11 +44,5 @@ export function updateValueAndSendFreshNotifications(memo, fn) {
   const activeSubscriptions =
     memo.activeSubscriptions === "one" ? "two" : "one";
 
-  memo.memoSubscriptions[activeSubscriptions].forEach((subscription) => {
-    subscription.sendSignal("fresh");
-  });
-
-  memo.effectSubscriptions[activeSubscriptions].forEach((subscription) => {
-    subscription.sendSignal("fresh");
-  });
+  sendFreshSignals(memo, activeSubscriptions);
 }

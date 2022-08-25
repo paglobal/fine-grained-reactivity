@@ -3,7 +3,7 @@ import set from "./set.js";
 
 export default function adaptState(initialValue) {
   const state = {
-    effectSubscriptions: {
+    syncSubscriptions: {
       one: new Set(),
       two: new Set(),
     },
@@ -11,6 +11,7 @@ export default function adaptState(initialValue) {
       one: new Set(),
       two: new Set(),
     },
+    asyncAndRenderSubscriptions: new Set(),
     activeSubscriptions: "one",
     value: initialValue,
   };

@@ -7,7 +7,7 @@ import { updateValueAndSendFreshNotifications } from "./notifyAndUpdate.js";
 export default function adaptMemo(fn) {
   const memo = {
     //state properties
-    effectSubscriptions: {
+    syncSubscriptions: {
       one: new Set(),
       two: new Set(),
     },
@@ -15,6 +15,7 @@ export default function adaptMemo(fn) {
       one: new Set(),
       two: new Set(),
     },
+    asyncAndRenderSubscriptions: new Set(),
     activeSubscriptions: "one",
     value: null,
     //effect properties

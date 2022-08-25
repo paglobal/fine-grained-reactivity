@@ -15,10 +15,10 @@ function implicitDependencyExecuteFn(effect, fn) {
 
   effectContexts.push(effect);
 
-  const fnReturnValue = fn();
+  const fnReturnValue = fn(effect.returnValue);
   const returnValueCleanup = () => {
     if (typeof fnReturnValue === "function") {
-      fnReturnValue();
+      effect.returnValue = fnReturnValue();
     }
   };
   cleanupSet
@@ -30,7 +30,7 @@ function implicitDependencyExecuteFn(effect, fn) {
   return () => effectAndDescendantCleanup(effect);
 }
 
-function dependencyArrayExecuteFn(effect, fn, depArray, options) {
+function dependencyArrayExecuteFn(effect, fn, depArray, options = {}) {
   //to enable children effects to obtain correct positions upon recreation
   effect.childCount = 0;
 
@@ -46,13 +46,13 @@ function dependencyArrayExecuteFn(effect, fn, depArray, options) {
   const argsArray = depArray.map((state) => state());
   effect.tracking = "depArray";
 
-  if (effect.firstRun && options?.defer) {
+  if (effect.firstRun && options.defer) {
     effect.firstRun = false;
   } else {
-    const fnReturnValue = fn(argsArray);
+    const fnReturnValue = fn(effect.returnValue, argsArray);
     const returnValueCleanup = () => {
       if (typeof fnReturnValue === "function") {
-        fnReturnValue();
+        effect.returnValue = fnReturnValue();
       }
     };
     cleanupSet.add(returnValueCleanup);
@@ -61,7 +61,36 @@ function dependencyArrayExecuteFn(effect, fn, depArray, options) {
 
   effectContexts.pop();
 
-  return () => effectAndDescendantCleanup(effect);
+  const returnExp = options.isComponent
+    ? [
+        () => effectAndDescendantCleanup(effect),
+        () => updateEffectDependencies(effect, depArray),
+        argsArray,
+      ]
+    : () => effectAndDescendantCleanup(effect);
+
+  return returnExp;
+}
+
+//created for the purpose of component-wrapping effects
+function updateEffectDependencies(effect, depArray) {
+  const cleanupSet = getCleanupNode(effect).get(0);
+  cleanupSet.forEach((cleanup) => {
+    cleanup();
+  });
+  cleanupSet.clear();
+
+  effectContexts.push(effect);
+
+  effect.tracking = "implicit";
+  const argsArray = depArray.map((state) => state());
+  effect.tracking = "depArray";
+
+  cleanupSet.add(() => observableSubscriptionsCleanup(effect));
+
+  effectContexts.pop();
+
+  return argsArray;
 }
 
 const executeFns = {

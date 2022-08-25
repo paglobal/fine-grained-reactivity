@@ -6,10 +6,15 @@ function subscribe(state, effect) {
 
   if (effect.tracking === "depArray") return;
 
-  state[`${type}Subscriptions`][activeSubscriptions].add(effect);
-  effect.observableSubscriptionSets.add(
-    state[`${type}Subscriptions`][activeSubscriptions]
-  );
+  if (type === "async" || type === "render") {
+    state.asyncAndRenderSubscriptions.add(effect);
+    effect.observableSubscriptionSets.add(state.asyncAndRenderSubscriptions);
+  } else {
+    state[`${type}Subscriptions`][activeSubscriptions].add(effect);
+    effect.observableSubscriptionSets.add(
+      state[`${type}Subscriptions`][activeSubscriptions]
+    );
+  }
 }
 
 export default function get(state) {
